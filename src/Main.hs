@@ -2,14 +2,17 @@ module Main where
 
 import Graphics.Gloss
 
+import GameBoard
+import Render
+import EventHandler
+import Movement
+
+
 window :: Display
-window = InWindow "ok" (200, 200) (500, 500)
+window = InWindow "haskell!mania" (width, height) (offset, offset)
 
-background :: Color
-background = white
-
-drawing :: Picture
-drawing = circle 80
+update :: Float -> ManiaGame -> ManiaGame
+update seconds = moveNotes
 
 main :: IO ()
-main = display window background drawing
+main = play window background fps initialState render handleKeys update
