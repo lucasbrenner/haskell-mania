@@ -31,6 +31,13 @@ data GameState =
     Playing | Menu
     deriving Show
 
+data ManiaMap = ManiaMap
+    { title :: String
+    , artist :: String
+    , difficulty :: String
+    , rawNotes :: [(Int, Int, Bool, Int)] -- [(startTime, column, isSlider, endTime)]
+    } deriving Show
+
 data ManiaGame = Game
     { buttons :: [Bool]
     , gameState :: GameState
@@ -73,6 +80,7 @@ timmingColumns =
 
 timmingConvert :: Int -> Int
 timmingConvert timming = round ((fromIntegral timming) * 0.06 * (fromIntegral noteSpeed))
+
 
 initialState :: ManiaGame
 initialState = Game
