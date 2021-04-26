@@ -1,14 +1,40 @@
 module Render where
 
 import Graphics.Gloss
+
 import GameBoard
+import Util
 
 render :: ManiaGame -> Picture 
 render game @ Game { gameState = Playing } = pictures
     [ pictures notes
     ]
     where
-        notes = [mkNote x | x <- (notesCoords game), x <= round ((fromIntegral height) / 2)]
+        notes = [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
 
-        mkNote :: Int -> Picture
-        mkNote coord = translate 0 (realToFrac coord) $ color blue $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
+        getX :: Int -> Float
+        getX col = realToFrac (xPosition col)
+            where
+            xPosition col
+                | col == 0 = (-noteWidth) - halfNoteWidth
+                | col == 1 = (-halfNoteWidth)
+                | col == 2 = halfNoteWidth
+                | otherwise = noteWidth + halfNoteWidth
+                where halfNoteWidth = noteWidth `div` 2 + 1
+
+        getColor :: Int -> Color
+        getColor col
+            | col == 0 || col == 3 = white
+            | otherwise = coolCyan
+
+        mkSimpleNote :: Int -> Int -> Picture
+        mkSimpleNote yCoord col = translate (getX col) (realToFrac yCoord) $ color (getColor col) $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
+
+        mkSlider :: Int -> Int -> Int -> Picture
+        mkSlider yCoord col endYCoord = circle 5 -- TODO
+        
+        mkNote :: (Int, Int, Bool, Int) -> Picture
+        mkNote (a, b, False, _) = mkSimpleNote a b
+        mkNote (a, b, True, d ) = mkSlider a b d
+
+        --mkNote xCoord yCoord = translate (realtoFrac xCoord) (realToFrac yCoord) $ color blue $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
