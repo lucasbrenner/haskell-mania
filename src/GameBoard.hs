@@ -30,6 +30,12 @@ data ManiaGame = Game
     , notesCoords :: [Int]
     } deriving Show
 
+data ManiaMap = ManiaMap
+    { title :: String
+    , artist :: String
+    , difficulty :: String
+    , rawNotes :: [(Int, Int, Bool, Int)] -- [(startTime, column, isSlider, endTime)]
+    } deriving Show
 
 initialState :: ManiaGame
 initialState = Game

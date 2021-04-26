@@ -20,9 +20,10 @@ with open(file_name, "r") as f:
                 stacks.append(int(values[0]))
 
             note.append(values[3] == "128") # eh um slider?
-            note.append(0)
-            if note[-2]:
-                note[-1] += int(values[5].split(":")[0])
+            if note[-1]:
+                note.append(int(values[5].split(":")[0]))
+            else:
+                note.append(int(values[2]))
 
             notes.append(note)
         else:
