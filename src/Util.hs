@@ -51,7 +51,7 @@ loadMap map_file = ManiaMap
     { title = lines !! 0
     , artist = lines !! 1
     , difficulty = lines !! 2
-    , rawNotes = getRawNotes (drop 3 lines)
+    , mapRawNotes = getRawNotes (drop 3 lines)
     }
     where
         lines = getFileLines $ mapDir ++ map_file

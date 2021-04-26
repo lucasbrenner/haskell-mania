@@ -2,8 +2,6 @@ module GameBoard where
 
 import Graphics.Gloss
 
-import Util
-
 background :: Color
 background = black
 
@@ -35,7 +33,7 @@ data ManiaMap = ManiaMap
     { title :: String
     , artist :: String
     , difficulty :: String
-    , rawNotes :: [(Int, Int, Bool, Int)] -- [(startTime, column, isSlider, endTime)]
+    , mapRawNotes :: [(Int, Int, Bool, Int)] -- [(startTime, column, isSlider, endTime)]
     } deriving Show
 
 data ManiaGame = Game
