@@ -25,8 +25,11 @@ windowRight = round $ (fromIntegral width) / 2
 fps :: Int
 fps = 60
 
+firstMapInitialHeight :: Int
+firstMapInitialHeight = 220
+
 data GameState = 
-    Playing | Menu
+    Playing | Menu | MapSelector
     deriving Show
 
 data ManiaMap = ManiaMap
@@ -41,6 +44,7 @@ data ManiaGame = Game
     , gameState :: GameState
     , score :: Int
     , rawNotes :: [(Int, Int, Bool, Int)] -- timming, collumn, isSlider, sliderEndTimming
+    , firstMapHeight :: Int -- height of the first rectangle in the map selector
     } deriving Show
 
 timmingColumns :: [(Int, Int, Bool, Int)]
@@ -79,11 +83,11 @@ timmingColumns =
 timmingConvert :: Int -> Int
 timmingConvert timming = round ((fromIntegral timming) * 0.06 * (fromIntegral noteSpeed))
 
-
 initialState :: ManiaGame
 initialState = Game
     { buttons = [False]
-    , gameState = Menu
+    , gameState = MapSelector
     , score = 0
     , rawNotes = [(timmingConvert begin, col, isSlider, timmingConvert end) | (begin, col, isSlider, end) <- timmingColumns]
+    , firstMapHeight = firstMapInitialHeight
     }

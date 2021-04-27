@@ -38,13 +38,47 @@ render game @ Game { gameState = Playing } = pictures
         mkNote (a, b, True, d ) = mkSlider a b d
 
         --mkNote xCoord yCoord = translate (realtoFrac xCoord) (realToFrac yCoord) $ color blue $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
-
+{-
+    Function that renders the map selector.
+-}
+render game @ Game { gameState = MapSelector } = 
+    pictures [ mkRectangle coolCyan 510 110 0 0 --highlight
+             , mkRectangle white 500 100 0 (rectHeights!!0) --rectangle to place the map info
+             , mkRectangle white 500 100 0 (rectHeights!!1) --rectangle to place the map info
+             , mkRectangle white 500 100 0 (rectHeights!!2) --(...)
+             , mkRectangle white 500 100 0 (rectHeights!!3)
+             , mkRectangle white 500 100 0 (rectHeights!!4)
+             , mkRectangle white 500 100 0 (rectHeights!!5)
+             , mkRectangle white 500 100 0 (rectHeights!!6)
+             , mkRectangle white 500 100 0 (rectHeights!!7)
+             ] where rectHeights = take 10 [fromIntegral x :: Float | x <- [firstMapHeight game, (firstMapHeight game)-110..]]
+{-
+    Function that renders the game menu.
+-}
 render game @ Game { gameState = Menu } =
-    pictures [ mKmenu white "haskell!mania" 0.5 0.5 (-200) 200
-             , mKmenu white "Controls: D, F, J, K" 0.3 0.3 (-205) 100
-             , mKmenu white "Select Map: ENTER" 0.3 0.3 (-205) (0)
-             , mKmenu white "Quit: ESC" 0.3 0.3 (-205) (-100)
+    pictures [ mkText white "haskell!mania" 0.5 0.5 (-200) 200
+             , mkText white "Controls: D, F, J, K" 0.3 0.3 (-205) 100
+             , mkText white "Select Map: ENTER" 0.3 0.3 (-205) (0)
+             , mkText white "Quit: ESC" 0.3 0.3 (-205) (-100)
              ]
 
-mKmenu :: Color -> String -> Float -> Float -> Float -> Float -> Picture
-mKmenu col text x y x' y' = translate x' y' $ scale x y $ color col $ Text text 
+{-
+    Function that renders text at a given position with a given size.
+    
+    col: text color
+    text: the text to be rendered
+    x, y: the size of the text
+    x', y': the position of the text on the scren
+-}
+mkText :: Color -> String -> Float -> Float -> Float -> Float -> Picture
+mkText col text x y x' y' = translate x' y' $ scale x y $ color col $ Text text
+
+{-
+    Function that renders a rectangle at a given position with a given size.
+    
+    col: rectangle color
+    x, y: the size of the rectangle
+    x', y': the position of the rectangle
+-}
+mkRectangle :: Color -> Float -> Float -> Float -> Float -> Picture
+mkRectangle col x y x' y' = translate x' y' $ color col $ rectangleSolid x y
