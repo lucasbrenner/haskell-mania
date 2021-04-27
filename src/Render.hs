@@ -6,12 +6,15 @@ import GameBoard
 import Util
 
 render :: ManiaGame -> Picture 
-render game @ Game { gameState = Playing } = pictures notes
+render game @ Game { gameState = Playing } = pictures
+    [ pictures notes
+    , mkMenu coolCyan (show (score game)) 0.5 0.5 100 270
+    ]
     where
         notes = [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
 
         getX :: Int -> Float
-        getX col = realToFrac (xPosition col)
+        getX col = realToFrac ((xPosition col) - 210)
             where
             xPosition col
                 | col == 0 = (-noteWidth) - halfNoteWidth
@@ -41,5 +44,8 @@ render game @ Game { gameState = Playing } = pictures notes
         mkNote :: (Int, Int, Bool, Int) -> Picture
         mkNote (a, b, False, _) = mkSimpleNote a b
         mkNote (a, b, True, d ) = mkSlider a b d
+
+        mkMenu :: Color -> String -> Float -> Float -> Float -> Float -> Picture
+        mkMenu col text x y x' y' = translate x' y' $ scale x y $ color col $ Text text 
 
         --mkNote xCoord yCoord = translate (realtoFrac xCoord) (realToFrac yCoord) $ color blue $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)

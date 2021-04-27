@@ -6,7 +6,7 @@ background :: Color
 background = black
 
 width, height, xOffset, yOffset :: Int
-width = 500
+width = 900
 height = 900
 xOffset = 600
 yOffset = 0
@@ -40,6 +40,7 @@ data ManiaGame = Game
     { buttons :: [Bool]
     , gameState :: GameState
     , score :: Int
+    , combo :: Int
     , rawNotes :: [(Int, Int, Bool, Int)] -- timming, collumn, isSlider, sliderEndTimming
     } deriving Show
 
@@ -193,8 +194,9 @@ timmingConvert timming = round (((fromIntegral timming) * (fromIntegral fps) * (
 
 initialState :: ManiaGame
 initialState = Game
-    { buttons = [False]
+    { buttons = [False, False, False, False]
     , gameState = Playing
     , score = 0
+    , combo = 0
     , rawNotes = [(timmingConvert begin, col, isSlider, timmingConvert end) | (begin, col, isSlider, end) <- timmingColumns]
     }

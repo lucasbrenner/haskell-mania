@@ -16,7 +16,7 @@ window = InWindow "haskell!mania" (width, height) (xOffset, yOffset)
 --update seconds game = trace (show game) (moveNotes game)
 
 update :: Float -> ManiaGame -> ManiaGame
-update seconds = moveNotes
+update seconds = moveNotes . hitNoteLogic
 
 main :: IO ()
 main = play window background fps initialState render handleKeys update
