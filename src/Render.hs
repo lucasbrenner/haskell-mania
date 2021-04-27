@@ -6,9 +6,7 @@ import GameBoard
 import Util
 
 render :: ManiaGame -> Picture 
-render game @ Game { gameState = Playing } = pictures
-    [ pictures notes
-    ]
+render game @ Game { gameState = Playing } = pictures notes
     where
         notes = [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
 
@@ -28,10 +26,17 @@ render game @ Game { gameState = Playing } = pictures
             | otherwise = coolCyan
 
         mkSimpleNote :: Int -> Int -> Picture
-        mkSimpleNote yCoord col = translate (getX col) (realToFrac yCoord) $ color (getColor col) $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
+        mkSimpleNote yCoord col = 
+            translate (getX col) (realToFrac yCoord)
+                $ color (getColor col)
+                    $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
 
         mkSlider :: Int -> Int -> Int -> Picture
-        mkSlider yCoord col endYCoord = circle 5 -- TODO
+        mkSlider begin col end = 
+            translate (getX col) ( ((realToFrac (begin + end)) / 2) - halfNoteHeight )
+                $ color (getColor col)
+                    $ rectangleSolid (realToFrac noteWidth) ((realToFrac (end - begin)))
+                        where halfNoteHeight = realToFrac (noteHeight `div` 2)
         
         mkNote :: (Int, Int, Bool, Int) -> Picture
         mkNote (a, b, False, _) = mkSimpleNote a b
