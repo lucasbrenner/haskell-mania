@@ -6,8 +6,8 @@ background :: Color
 background = black
 
 width, height, xOffset, yOffset :: Int
-width = 500
-height = 990
+width = 700
+height = 700
 xOffset = 600
 yOffset = 10
 
@@ -83,7 +83,7 @@ timmingConvert timming = round ((fromIntegral timming) * 0.06 * (fromIntegral no
 initialState :: ManiaGame
 initialState = Game
     { buttons = [False]
-    , gameState = Playing
+    , gameState = Menu
     , score = 0
     , rawNotes = [(timmingConvert begin, col, isSlider, timmingConvert end) | (begin, col, isSlider, end) <- timmingColumns]
     }

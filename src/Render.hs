@@ -38,3 +38,13 @@ render game @ Game { gameState = Playing } = pictures
         mkNote (a, b, True, d ) = mkSlider a b d
 
         --mkNote xCoord yCoord = translate (realtoFrac xCoord) (realToFrac yCoord) $ color blue $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
+
+render game @ Game { gameState = Menu } =
+    pictures [ mKmenu white "haskell!mania" 0.5 0.5 (-200) 200
+             , mKmenu white "Controls: D, F, J, K" 0.3 0.3 (-205) 100
+             , mKmenu white "Select Map: ENTER" 0.3 0.3 (-205) (0)
+             , mKmenu white "Quit: ESC" 0.3 0.3 (-205) (-100)
+             ]
+
+mKmenu :: Color -> String -> Float -> Float -> Float -> Float -> Picture
+mKmenu col text x y x' y' = translate x' y' $ scale x y $ color col $ Text text 
