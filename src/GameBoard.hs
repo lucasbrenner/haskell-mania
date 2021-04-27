@@ -7,9 +7,9 @@ background = black
 
 width, height, xOffset, yOffset :: Int
 width = 500
-height = 990
+height = 900
 xOffset = 600
-yOffset = 10
+yOffset = 0
 
 noteWidth, noteHeight, noteSpeed :: Int
 noteWidth = 115
