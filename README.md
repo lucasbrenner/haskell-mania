@@ -19,7 +19,12 @@ $ cabal install Cabal cabal-install
 ```
 
 Em seguida instalaremos a lib `gloss` do `caba` utilizando:
-``bash
+```bash
 $ cabal install gloss
 ```
 
+Agora para rodar o jogo e instalar as dependências faltantes execute:
+```bash
+$ cabal run
+```
+Esse comando vai inicialmente instalar as dêndencias do arquivo [haskell-mania.cabal][haskell-mania.cabal]. Em seguida ele vai executar o jogo, abrindo assim uma janela com interface gráfica.
