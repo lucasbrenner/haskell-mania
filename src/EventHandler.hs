@@ -1,5 +1,6 @@
 module EventHandler where
 
+import Models
 import GameBoard
 import Graphics.Gloss.Interface.Pure.Game
 

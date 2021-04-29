@@ -2,8 +2,9 @@ module Render where
 
 import Graphics.Gloss
 
-import GameBoard
+import Models
 import Util
+import GameBoard
 
 render :: ManiaGame -> Picture 
 render game @ Game { gameState = Playing } = pictures
@@ -44,13 +45,22 @@ render game @ Game { gameState = Playing } = pictures
 render game @ Game { gameState = MapSelector } = 
     pictures [ mkRectangle coolCyan 510 110 0 0 --highlight
              , mkRectangle white 500 100 0 (rectHeights!!0) --rectangle to place the map info
-             , mkRectangle white 500 100 0 (rectHeights!!1) --rectangle to place the map info
+             , mkText green (title ((maps game)!!0)) 0.3 0.3 (-150) (rectHeights!!0) --map title
+            
+             , mkRectangle white 500 100 0 (rectHeights!!1)
+             , mkText yellow (title ((maps game)!!1)) 0.3 0.3 (-150) (rectHeights!!1)
+
              , mkRectangle white 500 100 0 (rectHeights!!2) --(...)
+             , mkText red (title ((maps game)!!2)) 0.3 0.3 (-150) (rectHeights!!2)
+
              , mkRectangle white 500 100 0 (rectHeights!!3)
+             , mkText green (title ((maps game)!!3)) 0.3 0.3 (-80) (rectHeights!!3)
+
              , mkRectangle white 500 100 0 (rectHeights!!4)
+             , mkText yellow (title ((maps game)!!3)) 0.3 0.3 (-80) (rectHeights!!4)
+
              , mkRectangle white 500 100 0 (rectHeights!!5)
-             , mkRectangle white 500 100 0 (rectHeights!!6)
-             , mkRectangle white 500 100 0 (rectHeights!!7)
+             , mkText red (title ((maps game)!!3)) 0.3 0.3 (-80) (rectHeights!!5)
              ] where rectHeights = take 10 [fromIntegral x :: Float | x <- [firstMapHeight game, (firstMapHeight game)-110..]]
 {-
     Function that renders the game menu.

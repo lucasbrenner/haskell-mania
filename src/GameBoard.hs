@@ -1,6 +1,8 @@
 module GameBoard where
 
 import Graphics.Gloss
+import MapLoader
+import Models
 
 background :: Color
 background = black
@@ -27,25 +29,6 @@ fps = 60
 
 firstMapInitialHeight :: Int
 firstMapInitialHeight = 220
-
-data GameState = 
-    Playing | Menu | MapSelector
-    deriving Show
-
-data ManiaMap = ManiaMap
-    { title :: String
-    , artist :: String
-    , difficulty :: String
-    , mapRawNotes :: [(Int, Int, Bool, Int)] -- [(startTime, column, isSlider, endTime)]
-    } deriving Show
-
-data ManiaGame = Game
-    { buttons :: [Bool]
-    , gameState :: GameState
-    , score :: Int
-    , rawNotes :: [(Int, Int, Bool, Int)] -- timming, collumn, isSlider, sliderEndTimming
-    , firstMapHeight :: Int -- height of the first rectangle in the map selector
-    } deriving Show
 
 timmingColumns :: [(Int, Int, Bool, Int)]
 timmingColumns =
@@ -90,4 +73,5 @@ initialState = Game
     , score = 0
     , rawNotes = [(timmingConvert begin, col, isSlider, timmingConvert end) | (begin, col, isSlider, end) <- timmingColumns]
     , firstMapHeight = firstMapInitialHeight
+    , maps = loadMaps
     }

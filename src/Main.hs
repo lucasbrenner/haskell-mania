@@ -7,7 +7,7 @@ import GameBoard
 import Render
 import EventHandler
 import Movement
-
+import Models
 
 window :: Display
 window = InWindow "haskell!mania" (width, height) (xOffset, yOffset)
