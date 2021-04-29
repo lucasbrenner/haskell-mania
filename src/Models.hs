@@ -18,4 +18,5 @@ data ManiaGame = Game
     , rawNotes :: [(Int, Int, Bool, Int)] -- timming, collumn, isSlider, sliderEndTimming
     , firstMapHeight :: Int -- height of the first rectangle in the map selector
     , maps :: [ManiaMap]
+    , combo :: Int
     } deriving Show

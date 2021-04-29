@@ -30,24 +30,6 @@ fps = 60
 
 firstMapInitialHeight :: Int
 firstMapInitialHeight = 220
-data GameState = 
-    Playing | Menu
-    deriving Show
-
-data ManiaMap = ManiaMap
-    { title :: String
-    , artist :: String
-    , difficulty :: String
-    , mapRawNotes :: [(Int, Int, Bool, Int)] -- [(startTime, column, isSlider, endTime)]
-    } deriving Show
-
-data ManiaGame = Game
-    { buttons :: [Bool]
-    , gameState :: GameState
-    , score :: Int
-    , combo :: Int
-    , rawNotes :: [(Int, Int, Bool, Int)] -- timming, collumn, isSlider, sliderEndTimming
-    } deriving Show
 
 timmingColumns :: [(Int, Int, Bool, Int)]
 timmingColumns =
