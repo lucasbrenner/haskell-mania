@@ -1,6 +1,8 @@
 module GameBoard where
 
 import Graphics.Gloss
+import MapLoader
+import Models
 
 background :: Color
 background = black
@@ -26,6 +28,8 @@ windowRight = round $ (fromIntegral width) / 2
 fps :: Int
 fps = 60
 
+firstMapInitialHeight :: Int
+firstMapInitialHeight = 220
 data GameState = 
     Playing | Menu
     deriving Show
@@ -192,7 +196,6 @@ timmingColumns =
 timmingConvert :: Int -> Int
 timmingConvert timming = round (((fromIntegral (timming + 1000)) * (fromIntegral fps) * (fromIntegral noteSpeed)) / 1000)
 
-
 initialState :: ManiaGame
 initialState = Game
     { buttons = [False, False, False, False]
@@ -200,4 +203,6 @@ initialState = Game
     , score = 0
     , combo = 0
     , rawNotes = [(timmingConvert begin, col, isSlider, timmingConvert end) | (begin, col, isSlider, end) <- timmingColumns]
+    , firstMapHeight = firstMapInitialHeight
+    , maps = loadMaps
     }

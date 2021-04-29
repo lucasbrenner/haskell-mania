@@ -7,6 +7,7 @@ import GameBoard
 import Render
 import EventHandler
 import Movement
+import Models
 
 import System.Process
 
