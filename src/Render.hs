@@ -7,13 +7,15 @@ import Util
 
 render :: ManiaGame -> Picture 
 render game @ Game { gameState = Playing } = pictures
-    [ notes
+    [ notes1
     , mkMenu coolCyan (show (score game)) 0.5 0.5 100 270
     , mkMenu coolCyan ((show (combo game)) ++ "x") 0.5 0.5 100 170
     , hitPlace
     ]
     where
-        notes = pictures [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
+        rawNotes = [[mkNote note | note <- columnNotes] | columnNotes <- (notes game)]
+        notes1 = pictures [pictures column | column <- rawNotes]
+        --notes = pictures [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
         getX :: Int -> Float
         getX col = realToFrac ((xPosition col) - ((width `div` 2) - 2 * noteWidth) + 10)
             where
@@ -42,9 +44,11 @@ render game @ Game { gameState = Playing } = pictures
                     $ rectangleSolid (realToFrac noteWidth) ((realToFrac (end - begin)))
                         where halfNoteHeight = realToFrac (noteHeight `div` 2)
         
-        mkNote :: (Int, Int, Bool, Int) -> Picture
-        mkNote (a, b, False, _) = mkSimpleNote a b
-        mkNote (a, b, True, d ) = mkSlider a b d
+        mkNote :: Note -> Picture
+        mkNote note
+            | slider = mkSlider (startTime note) (column note) (endTime note)
+            | otherwise = mkSimpleNote (startTime note) (column note)
+            where slider = (isSlider note)
 
         mkMenu :: Color -> String -> Float -> Float -> Float -> Float -> Picture
         mkMenu col text x y x' y' = translate x' y' $ scale x y $ color col $ Text text 

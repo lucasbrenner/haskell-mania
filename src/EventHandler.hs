@@ -19,23 +19,18 @@ handleKeys (EventKey (Char c) Down _ _) game@ Game { gameState = Playing } =
 
 handleKeys _ game = game
 
-nextNote :: Int -> [(Int, Int, Bool, Int)] -> Int
-nextNote col [] = -1000
-nextNote col (x:xs)
-    | col == (snd' x) = fst' x
-    | otherwise = nextNote col xs
+getNextStartTime :: ManiaGame -> Int -> Int
+getNextStartTime game col = if allNotes == [] then -1000 else startTime $ head allNotes
+    where allNotes = (notes game) !! col
 
-getNextNote :: ManiaGame -> Int -> Int
-getNextNote game col = nextNote col (rawNotes game)
-
-removeItem :: [(Int, Int, Bool, Int)] -> Int -> [(Int, Int, Bool, Int)]
-removeItem [] _ = []
-removeItem (x:xs) col
-    | snd' x == col = xs
-    | otherwise = x:(removeItem xs col)
+removeItem :: [Note] -> [Note]
+removeItem [] = []
+removeItem (x:xs)
+    | (isSlider x) = (x { beenPressed = True }):xs
+    | otherwise = xs
 
 removeNote :: Int -> ManiaGame -> ManiaGame
-removeNote col game = game { rawNotes = (removeItem (rawNotes game) col) }
+removeNote col game = game { notes = updateValue (notes game) (removeItem ((notes game) !! col)) col }
 
 updateCombo :: Int -> ManiaGame -> ManiaGame
 updateCombo hitError game = game {combo = newCombo}
@@ -54,8 +49,8 @@ hitNoteLogic :: Int -> ManiaGame -> ManiaGame
 hitNoteLogic (-1) game = game
 hitNoteLogic col game = removeNote col $ updateCombo hitError $ updateScore hitError game
     where
-        nxtNote = getNextNote game col
-        hitError = abs (nxtNote - hitOffset)
+        nextStartTime = getNextStartTime game col
+        hitError = abs (nextStartTime - hitOffset)
 
 
 {-

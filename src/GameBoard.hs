@@ -42,8 +42,16 @@ data ManiaGame = Game
     , gameState :: GameState
     , score :: Int
     , combo :: Int
-    , rawNotes :: [(Int, Int, Bool, Int)] -- timming, collumn, isSlider, sliderEndTimming
+    , notes :: [[Note]] -- timming, collumn, isSlider, sliderEndTimming
     } deriving Show
+
+data Note = Note
+    { startTime :: Int
+    , column :: Int
+    , isSlider :: Bool
+    , endTime :: Int
+    , beenPressed :: Bool
+    } deriving (Show, Eq)
 
 timmingColumns :: [(Int, Int, Bool, Int)]
 timmingColumns =
@@ -192,6 +200,14 @@ timmingColumns =
 timmingConvert :: Int -> Int
 timmingConvert timming = round (((fromIntegral (timming + 1000)) * (fromIntegral fps) * (fromIntegral noteSpeed)) / 1000)
 
+noteConvert :: (Int, Int, Bool, Int) -> Note
+noteConvert (a, b, c, d)  = Note {startTime = timmingConvert a, column = b, isSlider = c, endTime = timmingConvert d, beenPressed = False}
+
+snd' :: (Int, Int, Bool, Int) -> Int
+snd' (_, x, _, _) = x
+
+columnCompress :: [(Int, Int, Bool, Int)] -> Int -> [Note]
+columnCompress rawNotes col = [noteConvert note | note <- rawNotes, snd' note == col]
 
 initialState :: ManiaGame
 initialState = Game
@@ -199,5 +215,5 @@ initialState = Game
     , gameState = Playing
     , score = 0
     , combo = 0
-    , rawNotes = [(timmingConvert begin, col, isSlider, timmingConvert end) | (begin, col, isSlider, end) <- timmingColumns]
+    , notes = [ columnCompress timmingColumns col | col <- [0..3]]
     }
