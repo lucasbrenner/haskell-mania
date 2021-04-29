@@ -7,14 +7,15 @@ import Util
 
 render :: ManiaGame -> Picture 
 render game @ Game { gameState = Playing } = pictures
-    [ pictures notes
+    [ notes
     , mkMenu coolCyan (show (score game)) 0.5 0.5 100 270
+    , mkMenu coolCyan ((show (combo game)) ++ "x") 0.5 0.5 100 170
+    , hitPlace
     ]
     where
-        notes = [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
-
+        notes = pictures [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
         getX :: Int -> Float
-        getX col = realToFrac ((xPosition col) - 210)
+        getX col = realToFrac ((xPosition col) - ((width `div` 2) - 2 * noteWidth) + 10)
             where
             xPosition col
                 | col == 0 = (-noteWidth) - halfNoteWidth
@@ -47,5 +48,13 @@ render game @ Game { gameState = Playing } = pictures
 
         mkMenu :: Color -> String -> Float -> Float -> Float -> Float -> Picture
         mkMenu col text x y x' y' = translate x' y' $ scale x y $ color col $ Text text 
+
+        mkHitPlace :: Int -> Int -> Picture
+        mkHitPlace yCoord col = 
+            translate (getX col) (realToFrac yCoord)
+                $ color red
+                    $ rectangleSolid (realToFrac (noteWidth + 1)) (realToFrac (noteHeight `div` 4))
+        
+        hitPlace = pictures [mkHitPlace hitOffset x | x <- [0..4]]
 
         --mkNote xCoord yCoord = translate (realtoFrac xCoord) (realToFrac yCoord) $ color blue $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)

@@ -6,15 +6,16 @@ background :: Color
 background = black
 
 width, height, xOffset, yOffset :: Int
-width = 900
-height = 900
+width = 700
+height = 700
 xOffset = 600
 yOffset = 0
 
-noteWidth, noteHeight, noteSpeed :: Int
-noteWidth = 115
-noteHeight = 50
+noteWidth, noteHeight, noteSpeed, hitOffset :: Int
+noteWidth = 89
+noteHeight = 38
 noteSpeed = 24
+hitOffset = (-(width `div` 2)) + 110
 
 windowTop, windowBottom, windowLeft, windowRight :: Int
 windowTop = round $ (fromIntegral height) / 2
@@ -189,7 +190,7 @@ timmingColumns =
     ]
 
 timmingConvert :: Int -> Int
-timmingConvert timming = round (((fromIntegral timming) * (fromIntegral fps) * (fromIntegral noteSpeed)) / 1000)
+timmingConvert timming = round (((fromIntegral (timming + 1000)) * (fromIntegral fps) * (fromIntegral noteSpeed)) / 1000)
 
 
 initialState :: ManiaGame
