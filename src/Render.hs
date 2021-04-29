@@ -8,13 +8,15 @@ import GameBoard
 
 render :: ManiaGame -> Picture 
 render game @ Game { gameState = Playing } = pictures
-    [ pictures notes
+    [ notes
+    , mkMenu coolCyan (show (score game)) 0.5 0.5 100 270
+    , mkMenu coolCyan ((show (combo game)) ++ "x") 0.5 0.5 100 170
+    , hitPlace
     ]
     where
-        notes = [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
-
+        notes = pictures [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
         getX :: Int -> Float
-        getX col = realToFrac (xPosition col)
+        getX col = realToFrac ((xPosition col) - ((width `div` 2) - 2 * noteWidth) + 10)
             where
             xPosition col
                 | col == 0 = (-noteWidth) - halfNoteWidth
@@ -29,14 +31,32 @@ render game @ Game { gameState = Playing } = pictures
             | otherwise = coolCyan
 
         mkSimpleNote :: Int -> Int -> Picture
-        mkSimpleNote yCoord col = translate (getX col) (realToFrac yCoord) $ color (getColor col) $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
+        mkSimpleNote yCoord col = 
+            translate (getX col) (realToFrac yCoord)
+                $ color (getColor col)
+                    $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
 
         mkSlider :: Int -> Int -> Int -> Picture
-        mkSlider yCoord col endYCoord = circle 5 -- TODO
+        mkSlider begin col end = 
+            translate (getX col) ( ((realToFrac (begin + end)) / 2) - halfNoteHeight )
+                $ color (getColor col)
+                    $ rectangleSolid (realToFrac noteWidth) ((realToFrac (end - begin)))
+                        where halfNoteHeight = realToFrac (noteHeight `div` 2)
         
         mkNote :: (Int, Int, Bool, Int) -> Picture
         mkNote (a, b, False, _) = mkSimpleNote a b
         mkNote (a, b, True, d ) = mkSlider a b d
+
+        mkMenu :: Color -> String -> Float -> Float -> Float -> Float -> Picture
+        mkMenu col text x y x' y' = translate x' y' $ scale x y $ color col $ Text text 
+
+        mkHitPlace :: Int -> Int -> Picture
+        mkHitPlace yCoord col = 
+            translate (getX col) (realToFrac yCoord)
+                $ color red
+                    $ rectangleSolid (realToFrac (noteWidth + 1)) (realToFrac (noteHeight `div` 4))
+        
+        hitPlace = pictures [mkHitPlace hitOffset x | x <- [0..4]]
 
         --mkNote xCoord yCoord = translate (realtoFrac xCoord) (realToFrac yCoord) $ color blue $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
 {-

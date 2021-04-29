@@ -13,6 +13,14 @@ frth (_, _, _, a) = a
 coolCyan :: Color
 coolCyan = makeColorI 53 200 254 255
 
+{-|
+    Updates the index 'idx' of a list to 'value'.
+-}
+updateValue :: [a] -> a -> Int -> [a]
+updateValue list value idx
+    | idx == 0 = value:(tail list)
+    | otherwise = (head list):(updateValue (tail list) value (idx - 1))
+
 type StartTime = Int
 type Column = Int
 type IsSlide = Bool
