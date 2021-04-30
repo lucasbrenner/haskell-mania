@@ -203,7 +203,7 @@ columnCompress rawNotes col = [noteConvert note | note <- rawNotes, snd' note ==
 initialState :: ManiaGame
 initialState = Game
     { buttons = [False, False, False, False]
-    , gameState = Playing
+    , gameState = MapSelector
     , score = 0
     , combo = 0
     , notes = [ columnCompress timmingColumns col | col <- [0..3]]

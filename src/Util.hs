@@ -50,6 +50,7 @@ getRawNotes lines =
     , read (line !! 3) :: Int)
     | line <- map (split ' ') lines
     ]
+
 {-
     Recebe o nome do arquivo de um mapa e retorna a estrutura ManiaMap com
     esse mapa.
@@ -59,7 +60,7 @@ loadMap map_file = ManiaMap
     { title = lines !! 0
     , artist = lines !! 1
     , difficulty = lines !! 2
-    , mapRawNotes = getRawNotes (drop 3 lines)
+    , mapRawNotes = (getRawNotes (drop 3 lines))
     }
     where
         lines = getFileLines $ mapDir ++ map_file
