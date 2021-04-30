@@ -7,8 +7,8 @@ Implementação simplificada, em haskell, do jogo osu!mania. Projeto para a disc
 
 De antemão é interessante que você:
 - Tenha acesso a um terminal UNIX.
-- Tenha instalado o [ghcup](https://gitlab.haskell.org/haskell/ghcup-hs#installation).
-- Tenha o binário do `cabal` pronto para rodar em sua máquina(por default a instalação do `ghcup` traz consigo o `cabal`)
+- Tenha instalado o [haskell plataform](https://www.haskell.org/platform/linux.html).
+- Tenha o binário do `cabal` pronto para rodar em sua máquina(por default a instalação do haskell traz consigo o `cabal`)
 - Tenha um display de dimensões maiores ou iguais há 700 de altura e 700 de largura.
 
 Primeiramente precisamos instalar o `cabal-install` que é executável responsável por instalar as dependências necessárias para que o jogo funcione.
@@ -27,4 +27,4 @@ Agora para rodar o jogo e instalar as dependências faltantes execute:
 ```bash
 $ cabal run
 ```
-Esse comando vai inicialmente instalar as dêndencias do arquivo [`haskell-mania.cabal`][haskell-mania.cabal]. Em seguida ele vai executar o jogo, abrindo assim uma janela com interface gráfica.
+Esse comando vai inicialmente instalar as dêndencias do arquivo [`haskell-mania.cabal`][https://github.com/lucasbrenner/haskell-mania/blob/main/haskell-mania.cabal]. Em seguida ele vai executar o jogo, abrindo assim uma janela com interface gráfica.
