@@ -21,10 +21,12 @@ getCol _   = -1
 handleKeys :: Event -> ManiaGame -> ManiaGame
 
 handleKeys (EventKey (SpecialKey KeyDown) Down _ _  ) game@ Game { gameState = MapSelector } =
-    game { firstMapHeight = (firstMapHeight game) + 110}
+    game { firstMapHeight = min ((firstMapHeight game) + 110) 550
+         , levelIndex = div (firstMapHeight game) 110}
 
 handleKeys (EventKey (SpecialKey KeyUp) Down _ _  ) game@ Game { gameState = MapSelector } =
-    game { firstMapHeight = (firstMapHeight game) - 110}
+    game { firstMapHeight = max ((firstMapHeight game) - 110) 0
+         , levelIndex = div (firstMapHeight game) 110}
 
 handleKeys (EventKey (SpecialKey KeyEnter) Down _ _  ) game@ Game { gameState = MapSelector } =
    switchToPlaying game
@@ -41,7 +43,7 @@ handleKeys _ game = game
 
 switchToPlaying :: ManiaGame -> ManiaGame
 switchToPlaying game = game { gameState = Playing, notes = newNotes }
-    where newNotes = convertRawNotes (mapRawNotes ((maps game) !! 0))
+    where newNotes = convertRawNotes (mapRawNotes ((maps game) !! (levelIndex game)))
 
 convertRawNotes :: [(Int, Int, Bool, Int)] -> [[Note]]
 convertRawNotes rawNotes = [ columnCompress rawNotes col | col <- [0..3]]

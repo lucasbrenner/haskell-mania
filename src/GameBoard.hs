@@ -213,4 +213,5 @@ initialState = Game
     , rawScore = 0
     , maxRawScore = 300 * (sum [(if trd x then 2 else 1) | x <- timmingColumns])
     , maps = loadMaps
+    , levelIndex = 2
     }

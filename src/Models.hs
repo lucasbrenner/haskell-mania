@@ -23,6 +23,7 @@ data ManiaGame = Game
     , rawScore :: Int
     , maxRawScore :: Int
     , maps :: [ManiaMap]
+    , levelIndex :: Int
     } deriving Show
 
 data Note = Note
