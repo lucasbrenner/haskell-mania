@@ -8,6 +8,7 @@ import Render
 import EventHandler
 import Movement
 import Models
+import Util
 
 import System.Process
 
@@ -21,5 +22,5 @@ update :: Float -> ManiaGame -> ManiaGame
 update seconds = moveNotes
 
 main = do
---    readProcess "gnome-terminal" ["--", "play", "imagine-dragons-believer.mp3"] ""
+    --getMusic
     play window background fps initialState render handleKeys update

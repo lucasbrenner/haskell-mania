@@ -7,6 +7,9 @@ import Graphics.Gloss.Interface.Pure.Game
 import GameBoard
 import Util
 import MapLoader
+import MusicLoader
+
+import System.Process
 
 getCol :: Char -> Int
 getCol 'd' = 0
@@ -24,7 +27,7 @@ handleKeys (EventKey (SpecialKey KeyUp) Down _ _  ) game@ Game { gameState = Map
     game { firstMapHeight = (firstMapHeight game) - 110}
 
 handleKeys (EventKey (SpecialKey KeyEnter) Down _ _  ) game@ Game { gameState = MapSelector } =
-    switchToPlaying game
+   switchToPlaying game
 
 handleKeys (EventKey (Char c) Down _ _) game@ Game { gameState = Playing } =
     hitNoteLogic col ( insertHitAnimation col game )
@@ -42,7 +45,6 @@ switchToPlaying game = game { gameState = Playing, notes = newNotes }
 
 convertRawNotes :: [(Int, Int, Bool, Int)] -> [[Note]]
 convertRawNotes rawNotes = [ columnCompress rawNotes col | col <- [0..3]]
-
 
 insertHitAnimation :: Int -> ManiaGame -> ManiaGame
 insertHitAnimation (-1) game = game
@@ -112,7 +114,11 @@ releaseNoteLogic col game = if inSlider col game
         nextEndTime = getNextEndTime game col
         hitError = abs (nextEndTime - hitOffset)
 
+getMusic :: IO String
+getMusic = readProcess "gnome-terminal" ["--", "play", mapDir ++ ((loadMusics) !!1)] ""
 
+finishMusic :: IO String
+finishMusic = readProcess "pkill" ["-f",".mp3"] ""
 {-
 handleKeys (EventKey (Char c) Down _ _) game@ Game { gameState = Playing } =
     game { buttons = updateValue (buttons game) True (getCol c) }
