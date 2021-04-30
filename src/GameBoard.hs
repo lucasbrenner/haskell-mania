@@ -2,6 +2,9 @@ module GameBoard where
 
 import Graphics.Gloss
 
+import MapLoader
+import Models
+
 background :: Color
 background = black
 
@@ -32,37 +35,6 @@ scoreByHitError hitError
 
 fps :: Int
 fps = 60
-
-data GameState = 
-    Playing | Menu
-    deriving Show
-
-data ManiaMap = ManiaMap
-    { title :: String
-    , artist :: String
-    , difficulty :: String
-    , mapRawNotes :: [(Int, Int, Bool, Int)] -- [(startTime, column, isSlider, endTime)]
-    } deriving Show
-
-data ManiaGame = Game
-    { buttons :: [Bool]
-    , gameState :: GameState
-    , score :: Int
-    , combo :: Int
-    , notes :: [[Note]] -- timming, collumn, isSlider, sliderEndTimming
-    , lastNoteScore :: Int
-    , timeSinceLastHit :: Int
-    , rawScore :: Int
-    , maxRawScore :: Int
-    } deriving Show
-
-data Note = Note
-    { startTime :: Int
-    , column :: Int
-    , isSlider :: Bool
-    , endTime :: Int
-    , beenPressed :: Bool
-    } deriving (Show, Eq)
 
 timmingColumns :: [(Int, Int, Bool, Int)]
 timmingColumns =
@@ -230,8 +202,10 @@ initialState = Game
     , score = 0
     , combo = 0
     , notes = [ columnCompress timmingColumns col | col <- [0..3]]
+    , firstMapHeight = firstMapInitialHeight
     , lastNoteScore = 0
     , timeSinceLastHit = 0
     , rawScore = 0
     , maxRawScore = 300 * (sum [(if trd x then 2 else 1) | x <- timmingColumns])
+    , maps = loadMaps
     }
