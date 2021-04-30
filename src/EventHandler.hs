@@ -23,47 +23,82 @@ handleKeys (EventKey (SpecialKey KeyUp) Down _ _  ) game@ Game { gameState = Map
     game { firstMapHeight = (firstMapHeight game) - 110}
 
 handleKeys (EventKey (Char c) Down _ _) game@ Game { gameState = Playing } =
-    hitNoteLogic (getCol c) game
+    hitNoteLogic col ( insertHitAnimation col game )
+    where col = getCol c
+
+handleKeys (EventKey (Char c) Up _ _) game@ Game { gameState = Playing } =
+    releaseNoteLogic col ( removeHitAnimation col game )
+    where col = getCol c
 
 handleKeys _ game = game
 
-nextNote :: Int -> [(Int, Int, Bool, Int)] -> Int
-nextNote col [] = -1000
-nextNote col (x:xs)
-    | col == (snd' x) = fst' x
-    | otherwise = nextNote col xs
+insertHitAnimation :: Int -> ManiaGame -> ManiaGame
+insertHitAnimation (-1) game = game
+insertHitAnimation col game = game { buttons = updateValue (buttons game) True col }
 
-getNextNote :: ManiaGame -> Int -> Int
-getNextNote game col = nextNote col (rawNotes game)
+removeHitAnimation :: Int -> ManiaGame -> ManiaGame
+removeHitAnimation (-1) game = game
+removeHitAnimation col game = game { buttons = updateValue (buttons game) False col }
 
-removeItem :: [(Int, Int, Bool, Int)] -> Int -> [(Int, Int, Bool, Int)]
-removeItem [] _ = []
-removeItem (x:xs) col
-    | snd' x == col = xs
-    | otherwise = x:(removeItem xs col)
+getNextStartTime :: ManiaGame -> Int -> Int
+getNextStartTime game col = if allNotes == [] then -1000 else startTime $ head allNotes
+    where allNotes = (notes game) !! col
+
+getNextEndTime :: ManiaGame -> Int -> Int
+getNextEndTime game col = if allNotes == [] then -1000 else endTime $ head allNotes
+    where allNotes = (notes game) !! col
+
+removeItem :: [Note] -> [Note]
+removeItem [] = []
+removeItem (x:xs)
+    | (isSlider x) = (x { beenPressed = True }):xs
+    | otherwise = xs
 
 removeNote :: Int -> ManiaGame -> ManiaGame
-removeNote col game = game { rawNotes = (removeItem (rawNotes game) col) }
+removeNote col game = game { notes = updateValue (notes game) (removeItem ((notes game) !! col)) col }
 
 updateCombo :: Int -> ManiaGame -> ManiaGame
 updateCombo hitError game = game {combo = newCombo}
-    where newCombo = if hitError <= 250 then (combo game) + 1 else 0
+    where newCombo = if scoreByHitError hitError > 0 then (combo game) + 1 else 0
 
 updateScore :: Int -> ManiaGame -> ManiaGame
-updateScore hitError game = game {score = (score game) + noteScore * ((combo game) + 1)}
+updateScore hitError game = game {score = (score game) + noteScore + 20 * ((combo game) `div` 50), rawScore = (rawScore game) + noteScore}
     where
-        noteScore
-            | hitError <= 100 = 300
-            | hitError <= 200 = 200
-            | hitError <= 250 = 100
-            | otherwise = 0
+        noteScore = scoreByHitError hitError
+
+updateLastHit :: Int -> ManiaGame -> ManiaGame
+updateLastHit hitError game = game { lastNoteScore = scoreByHitError hitError, timeSinceLastHit = 50 }
 
 hitNoteLogic :: Int -> ManiaGame -> ManiaGame
 hitNoteLogic (-1) game = game
-hitNoteLogic col game = removeNote col $ updateCombo hitError $ updateScore hitError game
+hitNoteLogic col game = removeNote col $ updateCombo hitError $ updateScore hitError $ updateLastHit hitError game
     where
-        nxtNote = getNextNote game col
-        hitError = abs (nxtNote - hitOffset)
+        nextStartTime = getNextStartTime game col
+        hitError = abs (nextStartTime - hitOffset)
+
+releaseRemoveItem :: [Note] -> [Note]
+releaseRemoveItem [] = []
+releaseRemoveItem (x:xs)
+    | (isSlider x) && (beenPressed x) = xs
+    | otherwise = (x:xs)
+
+releaseRemoveNote :: Int -> ManiaGame -> ManiaGame
+releaseRemoveNote col game = game { notes = updateValue (notes game) (releaseRemoveItem ((notes game) !! col)) col }
+
+inSlider :: Int -> ManiaGame -> Bool
+inSlider col game
+    | getNextStartTime game col == -1000 = False
+    | beenPressed (head ((notes game) !! col)) = True
+    | otherwise = False
+
+releaseNoteLogic :: Int -> ManiaGame -> ManiaGame
+releaseNoteLogic (-1) game = game
+releaseNoteLogic col game = if inSlider col game
+                            then releaseRemoveNote col $ updateCombo hitError $ updateScore hitError $ updateLastHit hitError game
+                            else game
+    where
+        nextEndTime = getNextEndTime game col
+        hitError = abs (nextEndTime - hitOffset)
 
 
 {-

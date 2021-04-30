@@ -1,6 +1,7 @@
 module Render where
 
 import Graphics.Gloss
+import Numeric
 
 import Models
 import Util
@@ -8,13 +9,20 @@ import GameBoard
 
 render :: ManiaGame -> Picture 
 render game @ Game { gameState = Playing } = pictures
-    [ notes
-    , mkMenu coolCyan (show (score game)) 0.5 0.5 100 270
-    , mkMenu coolCyan ((show (combo game)) ++ "x") 0.5 0.5 100 170
+    [ notes1
+    , showScore
+    , showCombo
     , hitPlace
+    , hitLimit
+    , keyPress
+    , lastHit
+    , showAccuracy
     ]
     where
-        notes = pictures [mkNote (begin, col, isSlider, end) | (begin, col, isSlider, end) <- (rawNotes game), begin <= windowTop]
+        rawNotes = [[mkNote note | note <- columnNotes] | columnNotes <- (notes game)]
+
+        notes1 = pictures [pictures column | column <- rawNotes]
+
         getX :: Int -> Float
         getX col = realToFrac ((xPosition col) - ((width `div` 2) - 2 * noteWidth) + 10)
             where
@@ -24,6 +32,28 @@ render game @ Game { gameState = Playing } = pictures
                 | col == 2 = halfNoteWidth
                 | otherwise = noteWidth + halfNoteWidth
                 where halfNoteWidth = noteWidth `div` 2 + 1
+
+        showScore = mkMenu coolCyan (show (score game)) 0.5 0.5 100 270
+
+        showCombo = mkMenu coolCyan ((show (combo game)) ++ "x") 0.5 0.5 100 170
+
+        getAccuracy :: ManiaGame -> Float
+        getAccuracy game = (realToFrac (rawScore game)) / (realToFrac (maxRawScore game)) * 100.0
+
+        showAccuracy = mkMenu coolCyan ( (showFFloat (Just 2) (getAccuracy game) "") ++ "%") 0.5 0.5 100 (-50)
+
+        lastHitText = mkMenu (snd values) (fst values) 0.5 0.5 (-200) 100
+            where
+            values
+                | lastScore == 300 = ("GOOD", coolCyan)
+                | lastScore == 200 = ("OK", light green)
+                | lastScore == 100 = ("BAD", light red)
+                | otherwise = ("MISS", red)
+                where lastScore = (lastNoteScore game)
+
+        lastHit = if (timeSinceLastHit game > 0)
+                  then lastHitText
+                  else pictures []
 
         getColor :: Int -> Color
         getColor col
@@ -36,29 +66,43 @@ render game @ Game { gameState = Playing } = pictures
                 $ color (getColor col)
                     $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
 
-        mkSlider :: Int -> Int -> Int -> Picture
-        mkSlider begin col end = 
+        mkSlider :: Int -> Int -> Int -> Bool -> Picture
+        mkSlider originalBegin col end beenPressed = 
             translate (getX col) ( ((realToFrac (begin + end)) / 2) - halfNoteHeight )
                 $ color (getColor col)
                     $ rectangleSolid (realToFrac noteWidth) ((realToFrac (end - begin)))
-                        where halfNoteHeight = realToFrac (noteHeight `div` 2)
+                        where
+                            halfNoteHeight = realToFrac (noteHeight `div` 2)
+                            begin = if beenPressed then hitOffset else originalBegin
         
-        mkNote :: (Int, Int, Bool, Int) -> Picture
-        mkNote (a, b, False, _) = mkSimpleNote a b
-        mkNote (a, b, True, d ) = mkSlider a b d
+        mkNote :: Note -> Picture
+        mkNote note
+            | slider = mkSlider (startTime note) (column note) (endTime note) (beenPressed note)
+            | otherwise = mkSimpleNote (startTime note) (column note)
+            where slider = (isSlider note)
 
         mkMenu :: Color -> String -> Float -> Float -> Float -> Float -> Picture
         mkMenu col text x y x' y' = translate x' y' $ scale x y $ color col $ Text text 
 
-        mkHitPlace :: Int -> Int -> Picture
-        mkHitPlace yCoord col = 
-            translate (getX col) (realToFrac yCoord)
-                $ color red
-                    $ rectangleSolid (realToFrac (noteWidth + 1)) (realToFrac (noteHeight `div` 4))
-        
-        hitPlace = pictures [mkHitPlace hitOffset x | x <- [0..4]]
+        mkHitPlace :: Int -> Color -> Picture
+        mkHitPlace col picColor =
+            translate (getX col) (realToFrac hitOffset)
+                $ color picColor
+                    $ rectangleSolid (realToFrac (noteWidth + 1)) (realToFrac (noteHeight `div` 8))
 
-        --mkNote xCoord yCoord = translate (realtoFrac xCoord) (realToFrac yCoord) $ color blue $ rectangleSolid (realToFrac noteWidth) (realToFrac noteHeight)
+        mkHitLimit :: Int -> Color -> Picture
+        mkHitLimit hitError picColor =
+            translate (realToFrac ((getX 3) + (fromIntegral (noteWidth `div` 2)) + 10)) (realToFrac hitOffset)
+                $ color picColor
+                    $ rectangleSolid (realToFrac 5) (realToFrac (hitError * 2))
+        
+        hitPlace = pictures [mkHitPlace x coolCyan | x <- [0..3]]
+
+        hitLimit = pictures [mkHitLimit 150 (light red), mkHitLimit 90 (light green), mkHitLimit 30 coolCyan]
+
+        keyPress = pictures [mkHitPlace x red | x <- [0..3], (buttons game) !! x]
+
+
 {-
     Function that renders the map selector.
 -}

@@ -4,6 +4,9 @@ import Graphics.Gloss
 import MapLoader
 import Models
 
+import MapLoader
+import Models
+
 background :: Color
 background = black
 
@@ -16,7 +19,7 @@ yOffset = 0
 noteWidth, noteHeight, noteSpeed, hitOffset :: Int
 noteWidth = 89
 noteHeight = 38
-noteSpeed = 24
+noteSpeed = 15
 hitOffset = (-(width `div` 2)) + 110
 
 windowTop, windowBottom, windowLeft, windowRight :: Int
@@ -24,6 +27,13 @@ windowTop = round $ (fromIntegral height) / 2
 windowBottom = -(round $ (fromIntegral height) / 2)
 windowLeft = -(round $ (fromIntegral width) / 2)
 windowRight = round $ (fromIntegral width) / 2
+
+scoreByHitError :: Int -> Int
+scoreByHitError hitError
+    | hitError <= 30 = 300
+    | hitError <= 90 = 200
+    | hitError <= 150 = 100
+    | otherwise = 0
 
 fps :: Int
 fps = 60
@@ -178,13 +188,29 @@ timmingColumns =
 timmingConvert :: Int -> Int
 timmingConvert timming = round (((fromIntegral (timming + 1000)) * (fromIntegral fps) * (fromIntegral noteSpeed)) / 1000)
 
+noteConvert :: (Int, Int, Bool, Int) -> Note
+noteConvert (a, b, c, d)  = Note {startTime = timmingConvert a, column = b, isSlider = c, endTime = timmingConvert d, beenPressed = False}
+
+snd' :: (Int, Int, Bool, Int) -> Int
+snd' (_, x, _, _) = x
+
+trd :: (Int, Int, Bool, Int) -> Bool
+trd (_, _, x, _) = x
+
+columnCompress :: [(Int, Int, Bool, Int)] -> Int -> [Note]
+columnCompress rawNotes col = [noteConvert note | note <- rawNotes, snd' note == col]
+
 initialState :: ManiaGame
 initialState = Game
     { buttons = [False, False, False, False]
     , gameState = Playing
     , score = 0
     , combo = 0
-    , rawNotes = [(timmingConvert begin, col, isSlider, timmingConvert end) | (begin, col, isSlider, end) <- timmingColumns]
+    , notes = [ columnCompress timmingColumns col | col <- [0..3]]
     , firstMapHeight = firstMapInitialHeight
+    , lastNoteScore = 0
+    , timeSinceLastHit = 0
+    , rawScore = 0
+    , maxRawScore = 300 * (sum [(if trd x then 2 else 1) | x <- timmingColumns])
     , maps = loadMaps
     }
