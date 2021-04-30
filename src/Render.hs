@@ -7,6 +7,9 @@ import Models
 import Util
 import GameBoard
 
+{-
+    Function that renders the game.
+-}
 render :: ManiaGame -> Picture 
 render game @ Game { gameState = Playing } = pictures
     [ notes1
@@ -121,10 +124,10 @@ render game @ Game { gameState = MapSelector } =
              , mkText green (title ((maps game)!!3)) 0.3 0.3 (-80) (rectHeights!!3)
 
              , mkRectangle white 500 100 0 (rectHeights!!4)
-             , mkText yellow (title ((maps game)!!3)) 0.3 0.3 (-80) (rectHeights!!4)
+             , mkText yellow (title ((maps game)!!4)) 0.3 0.3 (-80) (rectHeights!!4)
 
              , mkRectangle white 500 100 0 (rectHeights!!5)
-             , mkText red (title ((maps game)!!3)) 0.3 0.3 (-80) (rectHeights!!5)
+             , mkText red (title ((maps game)!!5)) 0.3 0.3 (-80) (rectHeights!!5)
              ] where rectHeights = take 10 [fromIntegral x :: Float | x <- [firstMapHeight game, (firstMapHeight game)-110..]]
 {-
     Function that renders the game menu.
