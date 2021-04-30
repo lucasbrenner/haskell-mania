@@ -24,7 +24,7 @@ data ManiaGame = Game
     , maxRawScore :: Int
     , maps :: [ManiaMap]
     , levelIndex :: Int
-    } deriving Show
+    } --deriving Show
 
 data Note = Note
     { startTime :: Int
