@@ -7,7 +7,9 @@ import GameBoard
 import Render
 import EventHandler
 import Movement
+import Models
 
+import System.Process
 
 window :: Display
 window = InWindow "haskell!mania" (width, height) (xOffset, yOffset)
@@ -18,5 +20,6 @@ update :: Float -> ManiaGame -> ManiaGame
 --update seconds game = trace (show game) (moveNotes game)
 update seconds = moveNotes
 
-main :: IO ()
-main = play window background fps initialState render handleKeys update
+main = do
+    readProcess "gnome-terminal" ["--", "play", "imagine-dragons-believer.mp3"] ""
+    play window background fps initialState render handleKeys update

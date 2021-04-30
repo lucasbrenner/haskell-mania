@@ -1,4 +1,4 @@
-file_name = input("Nome do arquivo: ")
+file_name = raw_input("Nome do arquivo: ")
 
 title = ""
 artist = ""
@@ -27,11 +27,11 @@ with open(file_name, "r") as f:
 
             notes.append(note)
         else:
-            if line.startswith("Version"):
+            if line.startswith("Version:"):
                 level = line.split(":")[-1]
-            elif line.startswith("Title"):
+            elif line.startswith("Title:"):
                 title = line.split(":")[-1]
-            elif line.startswith("Artist"):
+            elif line.startswith("Artist:"):
                 artist = line.split(":")[-1]
             elif line.startswith("[HitObjects]"):
                 startNotes = True

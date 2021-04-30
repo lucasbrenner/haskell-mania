@@ -1,6 +1,8 @@
 module GameBoard where
 
 import Graphics.Gloss
+import MapLoader
+import Models
 
 import MapLoader
 import Models
@@ -35,6 +37,9 @@ scoreByHitError hitError
 
 fps :: Int
 fps = 60
+
+firstMapInitialHeight :: Int
+firstMapInitialHeight = 220
 
 timmingColumns :: [(Int, Int, Bool, Int)]
 timmingColumns =

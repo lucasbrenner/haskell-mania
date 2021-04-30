@@ -3,7 +3,7 @@ module Util where
 import Graphics.Gloss
 import System.IO.Unsafe (unsafeDupablePerformIO)
 
-import GameBoard
+import Models
 
 fst' (a, _, _, _) = a
 snd' (_, a, _, _) = a
@@ -27,7 +27,7 @@ type IsSlide = Bool
 type EndTime = Int
 
 mapDir :: String
-mapDir = "../assets/maps/"
+mapDir = "assets/maps/"
 
 {-|
     Retorna uma lista de strings, onde cada string corresponde a uma linha

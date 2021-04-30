@@ -1,5 +1,7 @@
 module EventHandler where
 
+import Models
+import GameBoard
 import Graphics.Gloss.Interface.Pure.Game
 
 import GameBoard
@@ -13,6 +15,12 @@ getCol 'k' = 3
 getCol _   = -1
 
 handleKeys :: Event -> ManiaGame -> ManiaGame
+
+handleKeys (EventKey (SpecialKey KeyDown) Down _ _  ) game@ Game { gameState = MapSelector } =
+    game { firstMapHeight = (firstMapHeight game) + 110}
+
+handleKeys (EventKey (SpecialKey KeyUp) Down _ _  ) game@ Game { gameState = MapSelector } =
+    game { firstMapHeight = (firstMapHeight game) - 110}
 
 handleKeys (EventKey (Char c) Down _ _) game@ Game { gameState = Playing } =
     hitNoteLogic col ( insertHitAnimation col game )

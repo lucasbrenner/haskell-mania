@@ -1,7 +1,8 @@
 module Movement where
 
-import GameBoard
+import Models
 import Util
+import GameBoard
 
 moveNote :: Note -> Note
 moveNote note = note { startTime = (startTime note) - noteSpeed, endTime = (endTime note) - noteSpeed }
