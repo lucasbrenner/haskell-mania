@@ -8,7 +8,7 @@ data ManiaMap = ManiaMap
     { title :: String
     , artist :: String
     , difficulty :: String
-    , mapRawNotes :: [Notes] -- [(startTime, column, isSlider, endTime)]
+    , mapRawNotes :: [(Int, Int, Bool, Int)] -- [(startTime, column, isSlider, endTime)]
     } deriving Show
 
 data ManiaGame = Game
@@ -16,7 +16,7 @@ data ManiaGame = Game
     , gameState :: GameState
     , score :: Int
     , combo :: Int
-    , notes :: [[Notes]] -- timming, collumn, isSlider, sliderEndTimming
+    , notes :: [[Note]] -- timming, collumn, isSlider, sliderEndTimming
     , firstMapHeight :: Int -- height of the first rectangle in the map selector
     , lastNoteScore :: Int
     , timeSinceLastHit :: Int

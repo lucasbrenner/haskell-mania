@@ -6,6 +6,7 @@ import Graphics.Gloss.Interface.Pure.Game
 
 import GameBoard
 import Util
+import MapLoader
 
 getCol :: Char -> Int
 getCol 'd' = 0
@@ -22,6 +23,9 @@ handleKeys (EventKey (SpecialKey KeyDown) Down _ _  ) game@ Game { gameState = M
 handleKeys (EventKey (SpecialKey KeyUp) Down _ _  ) game@ Game { gameState = MapSelector } =
     game { firstMapHeight = (firstMapHeight game) - 110}
 
+handleKeys (EventKey (SpecialKey KeyEnter) Down _ _  ) game@ Game { gameState = MapSelector } =
+    switchToPlaying game
+
 handleKeys (EventKey (Char c) Down _ _) game@ Game { gameState = Playing } =
     hitNoteLogic col ( insertHitAnimation col game )
     where col = getCol c
@@ -31,6 +35,14 @@ handleKeys (EventKey (Char c) Up _ _) game@ Game { gameState = Playing } =
     where col = getCol c
 
 handleKeys _ game = game
+
+switchToPlaying :: ManiaGame -> ManiaGame
+switchToPlaying game = game { gameState = Playing, notes = newNotes }
+    where newNotes = convertRawNotes (mapRawNotes ((maps game) !! 0))
+
+convertRawNotes :: [(Int, Int, Bool, Int)] -> [[Note]]
+convertRawNotes rawNotes = [ columnCompress rawNotes col | col <- [0..3]]
+
 
 insertHitAnimation :: Int -> ManiaGame -> ManiaGame
 insertHitAnimation (-1) game = game

@@ -21,5 +21,5 @@ update :: Float -> ManiaGame -> ManiaGame
 update seconds = moveNotes
 
 main = do
-    readProcess "gnome-terminal" ["--", "play", "imagine-dragons-believer.mp3"] ""
+--    readProcess "gnome-terminal" ["--", "play", "imagine-dragons-believer.mp3"] ""
     play window background fps initialState render handleKeys update
