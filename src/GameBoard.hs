@@ -14,7 +14,7 @@ yOffset = 0
 noteWidth, noteHeight, noteSpeed, hitOffset :: Int
 noteWidth = 89
 noteHeight = 38
-noteSpeed = 24
+noteSpeed = 15
 hitOffset = (-(width `div` 2)) + 110
 
 windowTop, windowBottom, windowLeft, windowRight :: Int
@@ -22,6 +22,13 @@ windowTop = round $ (fromIntegral height) / 2
 windowBottom = -(round $ (fromIntegral height) / 2)
 windowLeft = -(round $ (fromIntegral width) / 2)
 windowRight = round $ (fromIntegral width) / 2
+
+scoreByHitError :: Int -> Int
+scoreByHitError hitError
+    | hitError <= 30 = 300
+    | hitError <= 90 = 200
+    | hitError <= 150 = 100
+    | otherwise = 0
 
 fps :: Int
 fps = 60
@@ -43,6 +50,10 @@ data ManiaGame = Game
     , score :: Int
     , combo :: Int
     , notes :: [[Note]] -- timming, collumn, isSlider, sliderEndTimming
+    , lastNoteScore :: Int
+    , timeSinceLastHit :: Int
+    , rawScore :: Int
+    , maxRawScore :: Int
     } deriving Show
 
 data Note = Note
@@ -206,6 +217,9 @@ noteConvert (a, b, c, d)  = Note {startTime = timmingConvert a, column = b, isSl
 snd' :: (Int, Int, Bool, Int) -> Int
 snd' (_, x, _, _) = x
 
+trd :: (Int, Int, Bool, Int) -> Bool
+trd (_, _, x, _) = x
+
 columnCompress :: [(Int, Int, Bool, Int)] -> Int -> [Note]
 columnCompress rawNotes col = [noteConvert note | note <- rawNotes, snd' note == col]
 
@@ -216,4 +230,8 @@ initialState = Game
     , score = 0
     , combo = 0
     , notes = [ columnCompress timmingColumns col | col <- [0..3]]
+    , lastNoteScore = 0
+    , timeSinceLastHit = 0
+    , rawScore = 0
+    , maxRawScore = 300 * (sum [(if trd x then 2 else 1) | x <- timmingColumns])
     }
