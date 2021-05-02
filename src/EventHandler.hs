@@ -34,6 +34,9 @@ handleKeys (EventKey (SpecialKey KeyEnter) Down _ _  ) game@ Game { gameState = 
    switchToPlaying game
 
 
+handleKeys (EventKey (Char 'p') Down _ _  ) game@ Game { gameState = Playing} =
+   game { gameState = MapSelector }
+
 handleKeys (EventKey (Char c) Down _ _) game@ Game { gameState = Playing } =
     hitNoteLogic col ( insertHitAnimation col game )
     where col = getCol c

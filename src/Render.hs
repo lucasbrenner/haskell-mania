@@ -133,10 +133,11 @@ render game @ Game { gameState = MapSelector } =
     Function that renders the game menu.
 -}
 render game @ Game { gameState = Menu } =
-    pictures [ mkText white "haskell!mania" 0.5 0.5 (-200) 200
-             , mkText white "Controls: D, F, J, K" 0.3 0.3 (-205) 100
-             , mkText white "Select Map: ENTER" 0.3 0.3 (-205) (0)
-             , mkText white "Quit: ESC" 0.3 0.3 (-205) (-100)
+    pictures [ mkText white "haskell!mania" 0.5 0.5 (-180) 200
+             , mkText white "Controls: D, F, J, K" 0.3 0.3 (-185) 100
+             , mkText white "Select Map: ENTER" 0.3 0.3 (-175) (0)
+             , mkText white "Quit: ESC" 0.3 0.3 (-80) (-100)
+             , mkText white "Select another map (ingame): P" 0.3 0.3 (-315) (-200)
              ]
 
 {-
