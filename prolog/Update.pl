@@ -10,7 +10,7 @@ update_game([NotesHead | NotesTail], Combo, Score, Key, NextNotes, NextCombo, Ne
         PressedColumn = -1
     ),
     (
-        PressedColumn = NextColumn -> NextCombo is Combo + 1, AdditionalScore is (Combo // 50) * 20, NextScore is Score + AdditionalScore;
+        PressedColumn = NextColumn -> NextCombo is Combo + 1, AdditionalScore is (Combo // 50) * 20, NextScore is Score + 100 + AdditionalScore;
         NextCombo = 0, NextScore = Score
     ),
     nth0(0, NotesHead, DropFactor),

@@ -11,9 +11,7 @@ menu() :-
     ).
 
 game() :-
-    notes(Notes), % map_loader...
-
-
+    notes(Notes),
     game_loop(Notes, 0, 0).
 
 game_loop([], _, _) :- menu().
@@ -24,7 +22,6 @@ game_loop(Notes, Combo, Score) :-
     get_key(['d', 'f', 'j', 'k'], Key),
 
     nth0(0, Notes, NextNote),
-    %nth0(1, Notes, NextColumn),
     nth0(0, NextNote, NextTimming),
     drop_notes_animation(Notes, Combo, Score, NextTimming),
 

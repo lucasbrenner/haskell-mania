@@ -53,10 +53,11 @@ print_game(Notes, Combo, Score) :-
 
     print_matrix(D).
 
-drop_notes_animation(_, _, _, 0).
+drop_notes_animation(_, _, _, Timming) :-
+    Timming =< 0.
 
 drop_notes_animation(Notes, Combo, Score, Timming) :-
-    NextTimming is Timming - 1,
+    NextTimming is Timming - 2,
     print_game(Notes, Combo, Score),
-    drop_notes_update(Notes, NextNotes, 1),
+    drop_notes_update(Notes, NextNotes, 2),
     drop_notes_animation(NextNotes, Combo, Score, NextTimming).
