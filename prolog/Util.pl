@@ -91,3 +91,16 @@ insert_notes_aux(In, [HeadNotes | TailNotes], Out) :-
     insert_on_matrix(In  , "########", Rows - I, J, Out1),
     insert_on_matrix(Out1, "########", Rows - I - 1, J, Out2),
     insert_notes_aux(Out2, TailNotes, Out).
+
+% Inserts Str on the center of In
+insert_on_center(In, Str, I, Out) :-
+    cols(Cols),
+    HalfCols is Cols // 2,
+    string_length(Str, StrLen),
+    insert_on_matrix(In, Str, I, HalfCols - StrLen // 2, Out).
+
+insert_list_on_center(In, [], In).
+
+insert_list_on_center(In, [[Str, I] | Tail], Out) :-
+    insert_on_center(In, Str, I, Out2),
+    insert_list_on_center(Out2, Tail, Out).
