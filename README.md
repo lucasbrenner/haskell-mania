@@ -1,7 +1,18 @@
 # haskell-mania
-Implementação simplificada, em haskell, do jogo osu!mania. Projeto para a disciplina Paradigmas e Linguagens de Programação. A especificação pode ser acessada [aqui](https://docs.google.com/document/d/1lwtagUiFO9Q02JBbwOYXgF-W4obM0LcYw6z6qNljZ18/edit)
+Implementação simplificada do jogo osu!mania. Projeto para a disciplina Paradigmas e Linguagens de Programação. A especificação pode ser acessada [aqui](https://docs.google.com/document/d/1lwtagUiFO9Q02JBbwOYXgF-W4obM0LcYw6z6qNljZ18/edit)
 
-### Como rodar o jogo
+Clone o repositório
+
+```bash
+$ git clone https://github.com/lucasbrenner/haskell-mania.git
+```
+Entre no repositório
+
+```bash
+$ cd haskell-mania
+```
+
+### Como rodar o jogo em haskell
 
 #### Pré-requisitos:
 
@@ -23,8 +34,37 @@ Em seguida instalaremos a lib `gloss` do `caba` utilizando:
 $ cabal install gloss
 ```
 
+Entre no diretório de haskell
+
+```bash
+$ cd haskell
+```
+
 Agora para rodar o jogo e instalar as dependências faltantes execute:
 ```bash
 $ cabal run
 ```
+
 Esse comando vai inicialmente instalar as dêndencias do arquivo [`haskell-mania.cabal`](https://github.com/lucasbrenner/haskell-mania/blob/main/haskell-mania.cabal). Em seguida ele vai executar o jogo, abrindo assim uma janela com interface gráfica.
+
+### Como rodar o jogo em Prolog
+
+#### Pré-requisitos:
+
+De antemão é interessante que você:
+- Tenha acesso a um terminal UNIX.
+- Tenha instalado [prolog](https://www.swi-prolog.org/download/stable).
+- Tenha um display de dimensões maiores ou iguais há 700 de altura e 900 de largura.
+
+Entre no diretório de prolog
+
+```bash
+$ cd prolog
+```
+
+Compile e rode o jogo executando
+
+```bash
+$ swipl -s Main.pl
+```
+
