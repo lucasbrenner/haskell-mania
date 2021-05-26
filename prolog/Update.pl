@@ -1,6 +1,6 @@
 
 % Updates the game given the Key pressed
-update_game([NotesHead | NotesTail], Combo, Key, NextNotes, NextCombo) :-
+update_game([NotesHead | NotesTail], Combo, Score, Key, NextNotes, NextCombo, NextScore) :-
     nth0(1, NotesHead, NextColumn),
     (
         Key = 'd' -> PressedColumn = 0;
@@ -10,8 +10,8 @@ update_game([NotesHead | NotesTail], Combo, Key, NextNotes, NextCombo) :-
         PressedColumn = -1
     ),
     (
-        PressedColumn = NextColumn -> NextCombo is Combo + 1;
-        NextCombo = 0
+        PressedColumn = NextColumn -> NextCombo is Combo + 1, ScoreMultiplier is (Combo + 10) // 10, NextScore is Score + ScoreMultiplier * 100;
+        NextCombo = 0, NextScore = Score
     ),
     NextNotes = NotesTail.
 

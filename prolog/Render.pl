@@ -28,7 +28,7 @@ print_menu() :-
 
     print_matrix(G).
 
-print_game(Notes, Combo) :-
+print_game(Notes, Combo, Score) :-
     new_matrix(A),
 
     insert_notes(A, Notes, B),
@@ -37,12 +37,15 @@ print_game(Notes, Combo) :-
     atom_concat(ComboStr, "x", ComboFormated),
     insert_on_matrix(B, ComboFormated, 5, 40, C),
 
-    print_matrix(C).
+    number_string(Score, ScoreStr),
+    insert_on_matrix(C, ScoreStr, 6, 40, D),
 
-drop_notes_animation(_, _, 0).
+    print_matrix(D).
 
-drop_notes_animation(Notes, Combo, Timming) :-
+drop_notes_animation(_, _, _, 0).
+
+drop_notes_animation(Notes, Combo, Score, Timming) :-
     NextTimming is Timming - 1,
-    print_game(Notes, Combo),
+    print_game(Notes, Combo, Score),
     drop_notes_update(Notes, NextNotes),
-    drop_notes_animation(NextNotes, Combo, NextTimming).
+    drop_notes_animation(NextNotes, Combo, Score, NextTimming).
