@@ -47,5 +47,5 @@ drop_notes_animation(_, _, _, 0).
 drop_notes_animation(Notes, Combo, Score, Timming) :-
     NextTimming is Timming - 1,
     print_game(Notes, Combo, Score),
-    drop_notes_update(Notes, NextNotes),
+    drop_notes_update(Notes, NextNotes, 1),
     drop_notes_animation(NextNotes, Combo, Score, NextTimming).

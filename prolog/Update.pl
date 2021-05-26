@@ -13,12 +13,13 @@ update_game([NotesHead | NotesTail], Combo, Score, Key, NextNotes, NextCombo, Ne
         PressedColumn = NextColumn -> NextCombo is Combo + 1, ScoreMultiplier is (Combo + 10) // 10, NextScore is Score + ScoreMultiplier * 100;
         NextCombo = 0, NextScore = Score
     ),
-    NextNotes = NotesTail.
+    nth0(0, NotesHead, DropFactor),
+    drop_notes_update(NotesTail, NextNotes, DropFactor).
 
 % Updates the notes position for the note drop animation
-drop_notes_update([], []).
+drop_notes_update([], [], _).
 
-drop_notes_update([[TimmingIn , ColIn] | TailIn], [[TimmingOut, ColOut] | TailOut]) :-
-    TimmingOut is TimmingIn - 1,
+drop_notes_update([[TimmingIn , ColIn] | TailIn], [[TimmingOut, ColOut] | TailOut], DropFactor) :-
+    TimmingOut is TimmingIn - DropFactor,
     ColOut = ColIn,
-    drop_notes_update(TailIn, TailOut).
+    drop_notes_update(TailIn, TailOut, DropFactor).
