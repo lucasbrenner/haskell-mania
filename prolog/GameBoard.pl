@@ -16,7 +16,7 @@ game() :-
 
     game_loop(Notes, 0, 0).
 
-game_loop([], _).
+game_loop([], _, _) :- menu().
 
 game_loop(Notes, Combo, Score) :-
     print_game(Notes, Combo, Score),
