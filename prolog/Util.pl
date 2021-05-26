@@ -85,8 +85,9 @@ insert_notes_aux(In, [], In).
 insert_notes_aux(In, [HeadNotes | TailNotes], Out) :-
     nth0(0, HeadNotes, I),
     nth0(1, HeadNotes, Col),
+    rows(Rows),
     J is Col * 8,
 
-    insert_on_matrix(In  , "########", I, J, Out1),
-    insert_on_matrix(Out1, "########", I + 1, J, Out2),
+    insert_on_matrix(In  , "########", Rows - I, J, Out1),
+    insert_on_matrix(Out1, "########", Rows - I - 1, J, Out2),
     insert_notes_aux(Out2, TailNotes, Out).
