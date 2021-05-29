@@ -29,7 +29,7 @@ $ cabal update
 $ cabal install Cabal cabal-install
 ```
 
-Em seguida instalaremos a lib `gloss` do `caba` utilizando:
+Em seguida instalaremos a lib `gloss` do `cabal` utilizando:
 ```bash
 $ cabal install gloss
 ```
