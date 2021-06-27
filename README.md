@@ -1,7 +1,7 @@
 # haskell-mania
 Implementação simplificada do jogo osu!mania. Projeto para a disciplina Paradigmas e Linguagens de Programação.
 
-![](snapshot.mp4)
+![snapshot](https://user-images.githubusercontent.com/52463587/123551438-25feba00-d748-11eb-8839-700c739d7364.gif)
 
 Clone o repositório
 
